@@ -83,7 +83,7 @@ function insertMethodfindAllActive(entityName: string) {
   * 
   * @return all active entities {@link ${entityName}}
   */
-  @Query("select p from ${entityName} p where p.activo = 1")
+  @Query("select p from ${entityName} p where p.active = 1")
   List<${entityName}> findAllActive();`;
 }
 

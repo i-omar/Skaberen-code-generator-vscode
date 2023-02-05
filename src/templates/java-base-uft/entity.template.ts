@@ -13,6 +13,7 @@ export function getEntityTemplate(
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -32,7 +33,10 @@ public class ${entityName} implements Serializable {
 	private static final long serialVersionUID = ${serialVersionUID};
 
 	@Id
-	private ${typeVariableID} id;
+  @GeneratedValue
+  private ${typeVariableID} id;
+  private boolean active;
+
 
 }
 `;
