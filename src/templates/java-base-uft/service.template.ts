@@ -125,7 +125,7 @@ function insertMethodfindAll(entityName: string, entityNameFirstLetterToLowerCas
     return `@Override
   public List<${entityName}> findAll() throws ErrorProcessingException {
     try {
-      return this.usuarioRepository.findAll();
+      return this.${entityNameFirstLetterToLowerCase}Repository.findAll();
     } catch (final Exception e) {
       log.error("${entityName} findAll(): {}", e.getMessage());
       throw new ErrorProcessingException(e.getMessage());
