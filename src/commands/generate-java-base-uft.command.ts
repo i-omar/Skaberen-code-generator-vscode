@@ -28,7 +28,7 @@ export const generateCodeJavaBase = async (uri: Uri) => {
   if (lodash.isNil(lodash.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isDirectory()) {
     targetDirectory = await promptForTargetDirectory();
     if (lodash.isNil(targetDirectory)) {
-      window.showErrorMessage("Seleccione un directorio válido");
+      window.showErrorMessage("Please select a valid directory");
       return;
     }
   } else {
@@ -36,37 +36,38 @@ export const generateCodeJavaBase = async (uri: Uri) => {
   }
 
 
-  // Agregar está linea en el settings.json para activar la opción de mostrar si desea o no usar la clase ResultadoProc
-  // "skaberen.useResuldadoProc": false,
-  const isActiveOptionResultadoProd: boolean | undefined = await workspace.getConfiguration("skaberen").useResuldadoProc;
+  // Add this line in the settings.json to enable the option to show whether or not to use ResultoftheProc class
+  // "skaberen.ResultoftheProc": false,
+  const isActiveOptionResultadoProd: boolean | undefined = await workspace.getConfiguration("skaberen").ResultoftheProc;
   isActiveOptionResultadoProd === undefined ? false : isActiveOptionResultadoProd;
 
   let useResulProc: boolean = false;
 
   if (isActiveOptionResultadoProd) {
-    let codeStyle = await window.showQuickPick(['NO usar clase ResultadoProc', 'Usar clase ResultadoProc'], {
+    let codeStyle = await window.showQuickPick(['DO NOT use class ResultoftheProc', 'Use class ResultoftheProc'], {
       placeHolder: '',
     });
-    useResulProc = codeStyle === 'Usar clase ResultadoProc';
+    useResulProc = codeStyle === 'Use class ResultoftheProc';
   }
 
 
 
   let entityName = await promptForEntityName();
   if (lodash.isNil(entityName) || entityName.trim() === "") {
-    window.showErrorMessage("El nombre de la clase no debe estar vacía");
+    window.showErrorMessage("The class name must not be empty!");
+    
     return;
   }
   entityName = entityName[0].toUpperCase() + entityName.slice(1);
 
-  let typeVariableID = await window.showQuickPick(['int', 'long', 'String', 'otro'], {
-    placeHolder: 'Tipo de variable del identificador',
+  let typeVariableID = await window.showQuickPick(['int', 'long', 'String', 'other'], {
+    placeHolder: 'Identifier Variable Type',
   });
 
-  if (typeVariableID === 'otro' || typeVariableID === undefined) {
+  if (typeVariableID === 'other' || typeVariableID === undefined) {
     typeVariableID = await promptForTypeVariable();
     if (lodash.isNil(typeVariableID) || typeVariableID.trim() === "") {
-      window.showErrorMessage("El tipo de variable no es válido");
+      window.showErrorMessage("Variable type is invalid");
       return;
     }
   }
@@ -90,17 +91,17 @@ export const generateCodeJavaBase = async (uri: Uri) => {
 
   let useUtilClass = true;
   if (useResulProc) {
-    const useUtilClassOpt = await window.showQuickPick([`Usar clases locales`, `Usar repositorio UFT`], {
-      placeHolder: 'Importar clases de utilidad (ResultadoProc, SearchPagination, etc)',
+    const useUtilClassOpt = await window.showQuickPick([`Use local classes`, `Use UFT repository`], {
+      placeHolder: 'Import utility classes (ResultProc, SearchPagination, etc)',
     });
-    useUtilClass = useUtilClassOpt === `Usar clases locales`;
+    useUtilClass = useUtilClassOpt === `Use local classes`;
   }
 
 
   try {
     await generateAllCode(entityName, targetDirectory, typeVariableID, metodosChecboxes, useUtilClass, useResulProc);
     window.showInformationMessage(
-      `Exito! Código ${entityName} generado correctamente`
+      `Success! Code ${entityName} generated successfully`
     );
   } catch (error) {
     window.showErrorMessage(
@@ -111,16 +112,16 @@ export const generateCodeJavaBase = async (uri: Uri) => {
 
 function promptForEntityName(): Thenable<string | undefined> {
   const entityNamePromptOptions: InputBoxOptions = {
-    prompt: "Nombre Entidad",
-    placeHolder: "Ej: Usuario",
+    prompt: "Entity Name",
+    placeHolder: "Ex: User",
   };
   return window.showInputBox(entityNamePromptOptions);
 }
 
 function promptForTypeVariable(): Thenable<string | undefined> {
   const entityNamePromptOptions: InputBoxOptions = {
-    prompt: "Tipo de variable del identificador",
-    placeHolder: "Ej: long",
+    prompt: "Identifier Variable Type",
+    placeHolder: "Ex: long",
   };
   return window.showInputBox(entityNamePromptOptions);
 }
@@ -208,7 +209,7 @@ const showQuickPickMethods = (checkboxes: Checkbox[], entityName: string) => {
   return window.showQuickPick(
     pickItems,
     {
-      placeHolder: 'Seleccione métodos',
+      placeHolder: 'Select methods',
       ignoreFocusOut: false,
       matchOnDescription: true,
       canPickMany: true,
